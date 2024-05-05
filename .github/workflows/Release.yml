@@ -1,0 +1,60 @@
+
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "version(ex. 1.0.0)"
+        required: true
+        default: "0.0.0"
+
+env:
+  VERSION: ${{ github.event.inputs.version }}
+  RELEASE: ${{ github.event.inputs.release }}
+  APP_NAME: "AutoBackupExtension"
+  ASSEMBLY_NAME: "AutoBackupExtension"
+  UPLOAD_NAME: "Upload"
+  PUBLISH_DIR: "/tmp/publish/"
+  SOLUTION_FILE_PATH: .
+  BUILD_CONFIGURATION: Release
+  BUILD_PLATFORM: x64
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Install .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.x
+        
+    - name: Restore
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build ${{ env.ASSEMBLY_NAME }} --no-restore -c release -p:Version=${{ env.VERSION }} -o ${{ env.PUBLISH_DIR }}
+      
+    - name: Test
+      run: dotnet test --no-build --logger "console;verbosity=detailed"
+
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: softprops/action-gh-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        name: ${{ env.APP_NAME }} Ver.${{ env.VERSION }}
+        files: ${{ env.PUBLISH_DIR }}${{ env.ASSEMBLY_NAME }}.vsix
+        tag_name: Release/${{ env.VERSION }}
+
+        
