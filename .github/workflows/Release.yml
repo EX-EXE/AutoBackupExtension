@@ -42,7 +42,7 @@ jobs:
       run: dotnet restore
 
     - name: Build
-      run: dotnet build ${{ env.ASSEMBLY_NAME }} --no-restore -c release -p:Version=${{ env.VERSION }} -o ${{ env.PUBLISH_DIR }}
+      run: dotnet build ./src/${{ env.ASSEMBLY_NAME }}/ --no-restore -c release -p:Version=${{ env.VERSION }} -o ${{ env.PUBLISH_DIR }}
       
     - name: Test
       run: dotnet test --no-build --logger "console;verbosity=detailed"
