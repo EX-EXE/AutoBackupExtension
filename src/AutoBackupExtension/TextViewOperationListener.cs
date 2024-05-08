@@ -23,7 +23,7 @@ public class TextViewOperationListener(
 
 	public TextViewExtensionConfiguration TextViewExtensionConfiguration => new()
 	{
-		AppliesTo = new[] { DocumentFilter.FromGlobPattern("**/*", relativePath: true) },
+		AppliesTo = new[] { DocumentFilter.FromDocumentType(DocumentType.KnownValues.Text) },
 	};
 
 	public async Task TextViewOpenedAsync(ITextViewSnapshot textView, CancellationToken cancellationToken)
