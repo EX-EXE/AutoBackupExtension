@@ -28,6 +28,8 @@ namespace AutoBackupExtension
 			serviceCollection.AddSingleton(TimeProvider.System);
 			serviceCollection.AddSingleton<BackupProvider>();
 			serviceCollection.AddSingleton<BackupService>();
-		}
+            serviceCollection.AddSingleton<CleanupService>();
+            serviceCollection.AddSingleton<ConfigService>();
+        }
 	}
 }

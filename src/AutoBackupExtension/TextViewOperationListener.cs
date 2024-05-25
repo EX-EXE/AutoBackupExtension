@@ -14,12 +14,16 @@ namespace AutoBackupExtension;
 public class TextViewOperationListener(
 	TimeProvider timeProvider,
 	BackupProvider backupProvider,
-	BackupService backupService)
+	BackupService backupService,
+    CleanupService cleanupService)
 	: ExtensionPart
 	, ITextViewOpenClosedListener
 	, ITextViewChangedListener
 {
-	private ConcurrentDictionary<string, Debouncer> debouncerDictionary = new();
+	private readonly BackupService backupService = backupService;
+    private readonly CleanupService cleanupService = cleanupService;
+
+    private ConcurrentDictionary<string, Debouncer> debouncerDictionary = new();
 
 	public TextViewExtensionConfiguration TextViewExtensionConfiguration => new()
 	{
